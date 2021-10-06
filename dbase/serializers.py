@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework import serializers
 from .models import Student, Course
 
@@ -23,4 +24,12 @@ class CourseSerializer(serializers.ModelSerializer):
         fields =[
             'id', 'course_name', 'course_proffesor',
             'course_description'
+        ]
+
+class StudentPartial(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+
+        fields= [
+            'student_email', 'student_phone'
         ]

@@ -1,10 +1,11 @@
+from functools import total_ordering
 from django.db.models import query
 from django.shortcuts import get_list_or_404
 from rest_framework import serializers, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Course, Student
-from .serializers import CourseSerializer, StudentSerializer
+from .serializers import CourseSerializer, StudentSerializer, StudentPartial
 from rest_framework.parsers import JSONParser
 
 
@@ -37,6 +38,12 @@ class CourseViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+#todo 
+# class-based-view 
+# swagger 
+# unit-test - prioority high 
+
+
 
 #gets, inserts, changes or deletes
 #student on a specific id
@@ -55,16 +62,20 @@ def student_detail(request, pk):
     elif request.method == 'PUT':
 
         student_details = JSONParser().parse(request)
-        student_serializer = StudentSerializer(student, data=student_details)
 
+        #PATCh
+
+        # student_detail 
+        
+        student_full = StudentSerializer(student, data=student_detail)
+        student_serializer = StudentPartial(student, data=student_details, partial=True)
+
+        
         if student_serializer.is_valid():
             student_serializer.save()
             return JsonResponse(student_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return JsonResponse(student_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-
-
-
+            return JsonResponse(student_full.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
     elif request.method == 'DELETE':
@@ -97,6 +108,9 @@ def delete_course(request, pk):
     if request.method == 'DELETE':
         course.delete()
         return JsonResponse({'message' : 'deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+
+    #returns specific course
     elif request.method == 'GET':
         course_serializer = CourseSerializer(course)
         return JsonResponse(course_serializer.data)
