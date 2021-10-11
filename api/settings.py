@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'drf_spectacular',
     'rest_framework_swagger',
     'dbase',
     'rest_framework',
