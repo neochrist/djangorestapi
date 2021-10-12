@@ -13,17 +13,12 @@ from rest_framework import status
 from django.http.response import JsonResponse
 from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema
-from rest_framework_swagger.views import get_swagger_view
 from django.conf.urls import url
+from rest_framework_swagger.views import get_swagger_view
 
 
 
 
-schema_view = get_swagger_view(title='Inern')
-
-urlpatterns = [
-    url(r'^$', schema_view)
-]
 
 class StudentViewSet(viewsets.ModelViewSet):
 
